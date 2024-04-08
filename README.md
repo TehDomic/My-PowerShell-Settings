@@ -1,4 +1,4 @@
-# MyPowerShell-Settings
+# My PowerShell Settings
 
 This one-liner adds my PowerShell settings I like to use.
 ```powershell
