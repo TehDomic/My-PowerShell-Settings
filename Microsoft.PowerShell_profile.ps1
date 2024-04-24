@@ -26,3 +26,6 @@ Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
             [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
         }
 }
+
+# Linux-like PowerShell closing using Ctrl+D
+Set-PSReadlineKeyHandler -Key Ctrl+d -Function DeleteCharOrExit
