@@ -5,18 +5,18 @@ Easily set up and apply my custom PowerShell configuration with the following op
 ## Installation Options
 
 ### Option 1: Auto-Install (One-Liner)
-For a fully automated setup, run this command:
+Quickly download and run the automated installer script, which will:
+1. Install WinGet (if missing).
+2. Install Windows Terminal (if missing).
+3. Set Windows Terminal as the default terminal (on Windows 11).
+4. Install PowerShell 7.x (if missing).
+5. Install or update the PSReadLine module.
+6. Append the custom PowerShell profile settings.
+
+Run this command in PowerShell:
 ```powershell
 iwr -useb https://raw.githubusercontent.com/TehDomic/My-PowerShell-Settings/main/AutoInstall.ps1 | iex
 ```
-
-This will:
-1. Install WinGet (if missing).
-2. Install Windows Terminal.
-3. Configure Windows Terminal as the default terminal (on Windows 11).
-4. Install PowerShell 7.x if not already installed.
-5. Install or update the PSReadLine module.
-6. Append the custom PowerShell profile settings for all users.
 
 ---
 
