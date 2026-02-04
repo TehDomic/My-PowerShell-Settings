@@ -36,7 +36,7 @@ try {
 
 # Step 2: Verify/Ensure Windows Terminal is Installed
 try {
-    winget list --id "Microsoft.WindowsTerminal" -q
+    winget list --id "Microsoft.WindowsTerminal"
     Write-Host "Windows Terminal is already installed. Proceeding..." -ForegroundColor Green
 } catch {
     Write-Host "Installing Windows Terminal..." -ForegroundColor Yellow
