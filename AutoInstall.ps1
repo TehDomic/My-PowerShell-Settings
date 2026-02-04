@@ -43,20 +43,21 @@ try {
     winget install --id Microsoft.WindowsTerminal -e --source winget
 }
 
-# Step 3: Set Windows Terminal as Default Terminal Application
+# Step 3: Windows Terminal as Default Terminal Application
 $winVersion = (Get-CimInstance Win32_OperatingSystem).Version
-if ($winVersion -like "10.*") {
-    Write-Host "Windows 10 detected. Please configure Windows Terminal as the default terminal manually." -ForegroundColor Yellow
-    Write-Host "Instructions:"
-    Write-Host "1. Open Windows Terminal."
-    Write-Host "2. Go to Settings > Startup > Default profile."
-    Write-Host "3. Manually select Windows Terminal as your desired terminal application."
-} elseif ($winVersion -like "11.*") {
+if ($winVersion -ge "10.0.22000") {
+    # Windows 11
     Write-Host "Windows 11 detected. Setting Windows Terminal as the default terminal programmatically..." -ForegroundColor Yellow
-    Set-ItemProperty -Path "HKCU:\Console" -Name "DefaultTerminalApplication" -Value "WindowsTerminal"
-    Write-Host "Windows Terminal set as the default terminal application." -ForegroundColor Green
+    try {
+        Set-ItemProperty -Path "HKCU:\Console" -Name "DefaultTerminalApplication" -Value "WindowsTerminal"
+        Write-Host "Windows Terminal has been set as the default terminal application." -ForegroundColor Green
+    } catch {
+        Write-Host "Failed to set Windows Terminal as default programmatically. You might need to set it manually via system settings." -ForegroundColor Red
+    }
 } else {
-    Write-Host "Unrecognized Windows version. Please configure Windows Terminal manually." -ForegroundColor Red
+    # Windows 10 or Unsupported OS
+    Write-Host "Windows 10 detected. Skipping default terminal configuration, as it is not supported." -ForegroundColor Yellow
+    Write-Host "You can still use Windows Terminal manually for your terminal tasks."
 }
 
 # Step 4: Install Latest Stable PowerShell 7.x
