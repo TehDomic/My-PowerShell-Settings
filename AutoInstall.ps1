@@ -1,6 +1,15 @@
 # Fully Automated Script: Setting up WinGet, Windows Terminal, PowerShell 7.x, and PSReadLine
 # Covers both Windows 10 and Windows 11 scenarios.
 
+# Step 0: Configure PowerShell Execution Policy
+Write-Host "Configuring PowerShell execution policy..." -ForegroundColor Yellow
+try {
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    Write-Host "Execution policy set to RemoteSigned for CurrentUser." -ForegroundColor Green
+} catch {
+    Write-Host "Warning: Could not set execution policy. You may need to run this script as Administrator." -ForegroundColor Red
+}
+
 # Step 1: Verify/Ensure WinGet is Available
 try {
     winget --version
@@ -23,7 +32,7 @@ try {
 
         try {
             $GitHubUri = "https://github.com/microsoft/winget-cli/releases/latest/download/winget.exe"
-            Invoke-WebRequest -Uri $GitHubUri -OutFile "$env:SystemRoot\\System32\\winget.exe" -UseBasicParsing
+            Invoke-WebRequest -Uri $GitHubUri -OutFile "$env:SystemRoot\System32\winget.exe" -UseBasicParsing
             Write-Host "GitHub version of WinGet installed. Please note: updates will be manual." -ForegroundColor Green
         } catch {
             Write-Host "`nError: Could not install any version of WinGet. Please visit the following URLs for manual installation:" -ForegroundColor Red
@@ -82,6 +91,11 @@ if (-not $installedVersion -or $installedVersion -lt $latestVersion) {
     Write-Host "PSReadLine is already up-to-date (Version: $installedVersion)." -ForegroundColor Green
 }
 
+# Unblock PSReadLine module files
+Write-Host "Unblocking PSReadLine module files..." -ForegroundColor Yellow
+Get-ChildItem -Path "$env:USERPROFILE\Documents\WindowsPowerShell\Modules\PSReadLine" -Recurse -ErrorAction SilentlyContinue | Unblock-File -ErrorAction SilentlyContinue
+Get-ChildItem -Path "$env:USERPROFILE\Documents\PowerShell\Modules\PSReadLine" -Recurse -ErrorAction SilentlyContinue | Unblock-File -ErrorAction SilentlyContinue
+
 # Verify installation
 if (Get-Module -Name PSReadLine -ListAvailable) {
     Write-Host "PSReadLine module is installed and ready to use." -ForegroundColor Green
@@ -98,4 +112,9 @@ if (-Not (Test-Path -Path $profilePath)) {
 }
 $settingsContent = Invoke-WebRequest -Uri $settingsUrl -UseBasicParsing | Select-Object -ExpandProperty Content
 Add-Content -Path $profilePath -Value "`n# Custom PowerShell Profile Settings`n$settingsContent"
+
+# Unblock the profile script
+Write-Host "Unblocking PowerShell profile script..." -ForegroundColor Yellow
+Unblock-File -Path $profilePath -ErrorAction SilentlyContinue
+
 Write-Host "Custom settings added. Restart PowerShell to apply." -ForegroundColor Green
